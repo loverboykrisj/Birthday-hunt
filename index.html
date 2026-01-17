@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>20 Years of You</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #ff477e;
+            --secondary: #ff85a2;
+            --accent: #ffc2e2;
+            --glass: rgba(255, 255, 255, 0.25);
+            --border: rgba(255, 255, 255, 0.5);
+            --text: #2d3436;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+
+        /* --- Animated Background Hearts --- */
+        .bg-hearts {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .bg-hearts li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px; height: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        .bg-hearts li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-hearts li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bg-hearts li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .bg-hearts li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-hearts li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .bg-hearts li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        
+        @keyframes animate {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        }
+
+        /* --- Main Glass Card --- */
+        .glass-card {
+            background: var(--glass);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            width: 90%;
+            max-width: 420px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            width: 100%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%; /* JS Updates this */
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            transition: width 0.5s ease;
+        }
+
+        /* --- Typography --- */
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            margin: 0;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- Photo Frame --- */
+        .photo-frame {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            background: #fff;
+        }
+        
+        .photo-frame img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+        }
+
+        /* --- Music Player Styling --- */
+        .music-player {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        iframe {
+            width: 100%;
+            height: 80px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        /* --- Riddle Box --- */
+        .riddle-container {
+            background: #fff0f5;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* --- Input Zone --- */
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid transparent;
+            border-radius: 50px;
+            background: white;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(255, 71, 126, 0.3);
+        }
+
+        button.unlock-btn {
+            margin-top: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 71, 126, 0.4);
+            transition: transform 0.2s, background 0.2s;
+            width: 100%;
+        }
+
+        button.unlock-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* --- Utilities --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <ul class="bg-hearts">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <div class="glass-card fade-in" id="main-card">
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <h1 id="header-title">Happy Birthday!</h1>
+        <h2 id="sub-header">The Hunt Begins</h2>
+
+        <div class="photo-frame">
+            <img id="memory-img" src="images/0.jpg" alt="Memory">
+        </div>
+
+        <div class="music-player">
+            <iframe id="music-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk" allow="autoplay; encrypted-media"></iframe>
+        </div>
+
+        <div class="riddle-container">
+            <i class="fas fa-quote-left" style="color: var(--primary); margin-right: 10px;"></i>
+            <span id="riddle-text">Loading your first clue...</span>
+        </div>
+
+        <div class="input-group" id="input-section">
+            <input type="text" id="code-input" placeholder="Scan QR & Enter Code">
+            <button class="unlock-btn" onclick="checkCode()">
+                <i class="fas fa-heart"></i> Unlock Next Memory
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- ⚙️ CONFIGURATION ⚙️ ---
+        
+        const totalLevels = 20; // Used for progress bar
+
+        // DATA STRUCTURE
+        // pass: Code on the PREVIOUS QR
+        // image: Photo to show
+        // song: YouTube ID
+        // riddle: Text for the NEXT location
+        // title: Custom header text for that level
+        
+        const levels = [
+            {
+                pass: "START",
+                image: "images/0.jpg",
+                song: "-BjZmE2gtdo",
+                riddle: "Welcome to your 20th birthday adventure! I've hidden 19 QR codes around campus. <br><br><b>Clue #1:</b> Enter The Code You Got From The First QR",
+                title: "Let's Begin ❤️"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/1.jpg",
+                song: "lSD_L-xic9o",
+                riddle: "Yay! You found the first one. <br><br><b>Clue #2:</b> Every night I walk you till the very end, Then comes a hug, a smile, “good night,” my friend. It’s not my home, yet not yours inside—, Find the place where our footsteps divide.",
+                title: "Level 1 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/2.jpg",
+                song: "yKNxeF4KMsY",
+                riddle: "You're smart! <br><br><b>Clue #3:</b> I dragged you here, you rolled your eyes, But we made it, much to your surprise. In the gym, our laughter flew, Your next clue waits where we both grew.",
+                title: "Level 2 Complete"
+            },
+             {
+                pass: "START",
+                image: "images/3.jpg",
+                song: "GxldQ9eX2wo",
+                riddle: "Clue #4:</b> By the girls’ hostel, near the cricket ground, A quiet bench is where we’re usually found. Under the night sky, we sit and talk, Scan the code here to continue the walk.",
+                title: "Level 3 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/4.jpg",
+                song: "igIfiqqVHtA", // Despacito (Example)
+                riddle: "Clue #5:</b> Close to a temple, calm and still, Where nervous smiles met stronger will. If beginnings had a location too, This is the place that points to you.",
+                title: "Level 4 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/5.jpg",
+                song: "kLbn61Z4LDI", // Ed Sheeran
+                riddle: "Clue #6:</b> Beside the boys’ hostel, just off the way, A dark quiet road where we often stay. No crowds, no lights, just you and me—, Go to the place that tops our memory.",
+                title: "Level 5 Complete"
+            },
+             {
+                pass: "START",
+                image: "images/6.jpg",
+                song: "KKQl-pIRQMY", // Lofi Girl (Example)
+                riddle: "Clue #7:</b> When clocks forget to tick past twelve, And empty stomachs demand some help. Tea, noodles, rice, and endless chat, Seek the spot that cures midnight that.",
+                title: "Level 6 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/7.jpg",
+                song: "VF-r5TtlT9w", // Despacito (Example)
+                riddle: "Clue #8:</b> On the lobby sofa, we sit side by side, Watching shows as time slips by. Soft cushions, laughter, and a little spree, Scan the code here, the next clue’s key.",
+                title: "Level 7 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/8.jpg",
+                song: "rn0brgg2BpI", // Ed Sheeran
+                riddle: "Clue #9:</b> The place we eat, where stories unfold, With every meal, memories told. Not fancy, not hidden, but ours in part, Your next clue waits where we fill our heart.",
+                title: "Level 8 Complete"
+            },
+             {
+                pass: "START",
+                image: "images/9.jpg",
+                song: "ic1l36GrNOU", // Lofi Girl (Example)
+                riddle: "Clue #10:</b> In the basement, quiet and neat, We share our snacks and take a seat. Laughter, bites, and moments small, Scan the code here to find them all.",
+                title: "Level 9 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/10.jpg",
+                song: "tscMSXk_jaQ", // Despacito (Example)
+                riddle: "Clue #11:</b> Water tanks ready, powders in the air, Holi madness, memories to share. By the mess, Where you spread colors, Your next clue waits in plain sight.",
+                title: "Level 10 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/11.jpg",
+                song: "k4V3Mo61fJM", // Ed Sheeran
+                riddle: "Clue #12:</b> The place we spike, serve, and play, Where cheers echo and friends stay away. Rest your feet where we usually sit, Scan the code there to continue it.",
+                title: "Level 11 Complete"
+            },
+             {
+                pass: "START",
+                image: "images/12.jpg",
+                song: "gvyUuxdRdR4", // Lofi Girl (Example)
+                riddle: "Clue #13:</b> Where daily we sit and sleep as the professors speaks, Our lectures long from morning to night. But the code is not inside the room, Search the walls outside and find your bloom.",
+                title: "Level 12 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/13.jpg",
+                song: "Cb6wuzOurPc", // Despacito (Example)
+                riddle: "Clue #14:</b> All-nighter done, our stomachs shout, Bimal Da’s Maggi is what it’s about. Early morning bites, laughter too, Scan the code here to continue through.",
+                title: "Level 13 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/14.jpg",
+                song: "sK7riqg2mr4", // Ed Sheeran
+                riddle: "Clue #15:</b> After Halloween, under the night sky, We sat where the pond met your eye. A famous spot where food and laughter blend, Scan the code here—the next clue, my Love.",
+                title: "Level 14 Complete"
+            },
+             {
+                pass: "START",
+                image: "images/15.jpg",
+                song: "cYOB941gyXI", // Lofi Girl (Example)
+                riddle: "Clue #16:</b> Beside still water that reflects the sky, On a quiet bench as time passed by, We talked, you opened your heart to me, And shared our very first kiss—, Find the place near the pond where it all felt real.",
+                title: "Level 15 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/16.jpg",
+                song: "CZt-rVn2BJs", // Despacito (Example)
+                riddle: "Clue #17:</b> Where screens glow bright and pencils race, We cram, we sigh, we set the pace, Sometimes we Fight with the Snakes. Enter here where knowledge flows free, Scan the code and the next clue you’ll see.",
+                title: "Level 16 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/17.jpg",
+                song: "hombaCO1EB4", // Ed Sheeran
+                riddle: "Clue #18:</b> A staircase climbs where books reside, We’d sit on top with nothing to hide. Laughs, whispers, and stolen time, Scan the code here—the clue is prime.",
+                title: "Level 17 Complete"
+            },
+            {
+                pass: "PROTEIN",
+                image: "images/18.jpg",
+                song: "KkvTYrFIxNM", // Despacito (Example)
+                riddle: "Clue #19:</b> By the field where athletes train, A dark little path that knows our name. We stole our moments under the night, Your next clue waits where the shadows hide.",
+                title: "Level 18 Complete"
+            },
+            {
+                pass: "MITOSIS",
+                image: "images/19.jpg",
+                song: "2Vv-BfVoq4", // Ed Sheeran
+                riddle: "You're smart! <br><br><b>Clue #20:</b> Where wires hum and lights glow near, A quiet corner only we hold dear. Behind the generator, close to Gate Seven, A hidden moment that felt like heaven.",
+                title: "Level 19 Complete"
+            },
+            {
+                pass: "FINISH",
+                image: "images/20.jpg",
+                song: "rtOvBOTyX00", // Happy Birthday
+                riddle: "YOU DID IT! Come find me at Basement, mess for your real gift! ❤️",
+                title: "Happy Birthday!"
+            }
+        ];
+
+        let currentLevelIndex = 0;
+
+        function init() {
+            // Load initial state
+            updateUI(levels[0]);
+            updateProgress();
+        }
+
+        function checkCode() {
+            const input = document.getElementById('code-input');
+            const code = input.value.trim().toUpperCase();
+            
+            // Check against the NEXT level's password
+            // (Because scanning QR 1 unlocks Level 1 info)
+            const nextIdx = currentLevelIndex + 1;
+
+            if (nextIdx < levels.length && code === levels[nextIdx].pass) {
+                // SUCCESS!
+                currentLevelIndex++;
+                
+                // 1. Explosion of Confetti
+                celebrate();
+                
+                // 2. Clear Input
+                input.value = "";
+                
+                // 3. Update UI
+                updateUI(levels[currentLevelIndex]);
+                updateProgress();
+
+                // 4. If finished, hide input
+                if (currentLevelIndex === levels.length - 1) {
+                    document.getElementById('input-section').classList.add('hidden');
+                }
+
+            } else {
+                // ERROR SHAKE
+                const card = document.getElementById('main-card');
+                card.style.transform = "translateX(10px)";
+                setTimeout(() => card.style.transform = "translateX(-10px)", 100);
+                setTimeout(() => card.style.transform = "translateX(10px)", 200);
+                setTimeout(() => card.style.transform = "translateX(0)", 300);
+                
+                input.style.borderColor = "red";
+                setTimeout(() => input.style.borderColor = "transparent", 1000);
+            }
+        }
+
+        function updateUI(data) {
+            // Text Updates
+            document.getElementById('header-title').innerText = data.title;
+            document.getElementById('riddle-text').innerHTML = data.riddle;
+            
+            // Image Update (Smooth fade)
+            const img = document.getElementById('memory-img');
+            img.style.opacity = 0;
+            setTimeout(() => {
+                img.src = data.image;
+                img.onload = () => { img.style.opacity = 1; };
+            }, 300);
+
+            // Song Update
+            document.getElementById('music-frame').src = `https://www.youtube.com/embed/${data.song}?autoplay=1`;
+        }
+
+        function updateProgress() {
+            const percentage = ((currentLevelIndex) / (totalLevels)) * 100;
+            document.getElementById('progress-bar').style.width = percentage + "%";
+            document.getElementById('sub-header').innerText = `Level ${currentLevelIndex} / ${totalLevels}`;
+        }
+
+        function celebrate() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff477e', '#ff85a2', '#ffd166', '#06d6a0']
+            });
+        }
+
+        // Run on load
+        window.onload = init;
+
+    </script>
+</body>
+</html>
